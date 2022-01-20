@@ -1,26 +1,26 @@
 import random
 import numpy as np
 from rubicks_visualize_console import *
+from npy_append_array import NpyAppendArray
 
 moves = ["U", "L", "F", "R", "B", "D",
          "U'", "D'", "F'", "B'", "R'", "L'",
          "U2", "D2", "F2", "B2", "R2", "L2"]
 
 colours_dict = {
-        'w': white_center_sq,
-        'o': orange_center_sq,
-        'r': red_center_sq,
-        'g': green_center_sq,
-        'b': blue_center_sq,
-        'y': yellow_center_sq
-    }
-
+    'w': white_center_sq,
+    'o': orange_center_sq,
+    'r': red_center_sq,
+    'g': green_center_sq,
+    'b': blue_center_sq,
+    'y': yellow_center_sq
+}
 
 def scramble_cube():
     # random 25 do 30 poteza za mjesanje kocke
     moves_num = random.randint(25, 30)
     gen_moves = [random.choice(moves) for i in range(moves_num)]
-    return scramble(gen_moves)
+    return scramble(gen_moves), gen_moves
 
 
 class Cube:
@@ -155,14 +155,39 @@ def rotate_cube(state, rotation_letter, move_index):
 
 def scramble(gen_moves):
     cube = Cube()
+    print(gen_moves)
     for i in gen_moves:
         rotate_cube(cube, i, moves.index(i[0]))
-    cube.print_cube()
+    # cube.print_cube()
     return cube
 
 
+def gen_scrambled_cubes(n):
+    with NpyAppendArray('scrambled_cubes.npy') as npaa:
+        for i in range(n):
+            scrambled_cube, moves = scramble_cube()
+            output_cube = np.concatenate([np.array([colours_dict[i] for i in scrambled_cube.state[1]]),
+                                          np.array([colours_dict[i] for i in scrambled_cube.state[2]]),
+                                          np.array([colours_dict[i] for i in scrambled_cube.state[3]]),
+                                          np.array([colours_dict[i] for i in scrambled_cube.state[4]]),
+                                          np.array([colours_dict[i] for i in scrambled_cube.state[0]]),
+                                          np.array([colours_dict[i] for i in scrambled_cube.state[5]])], axis=0)
+            npaa.append(output_cube)
+
+
+def gen_solved_cube():
+    with NpyAppendArray('solved_cube.npy') as npaa:
+        output_cube = np.concatenate([orange_center_sq for i in range(0, 9)],
+                                     [green_center_sq for i in range(0, 9)],
+                                     [red_center_sq for i in range(0, 9)],
+                                     [blue_center_sq for i in range(0, 9)],
+                                     [white_center_sq for i in range(0, 9)],
+                                     [yellow_center_sq for i in range(0, 9)], axis=0)
+        npaa.append(output_cube)
+
+
 if __name__ == '__main__':
-    scrambled_cube = scramble_cube()
+    scrambled_cube, moves = scramble_cube()
     output_cube = np.concatenate([np.array([colours_dict[i] for i in scrambled_cube.state[1]]),
                                   np.array([colours_dict[i] for i in scrambled_cube.state[2]]),
                                   np.array([colours_dict[i] for i in scrambled_cube.state[3]]),
@@ -170,3 +195,7 @@ if __name__ == '__main__':
                                   np.array([colours_dict[i] for i in scrambled_cube.state[0]]),
                                   np.array([colours_dict[i] for i in scrambled_cube.state[5]])], axis=0)
     print_rubicks(output_cube)
+
+    #with open('test.npy', 'rb') as f:
+    #    a = np.load(f)
+    #print(a)
