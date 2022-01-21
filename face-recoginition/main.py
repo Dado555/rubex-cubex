@@ -9,7 +9,7 @@ def show_webcam():
         _, image = cam.read()
 
         image = cv2.flip(image, 1)
-        image, contours = get_contours(image)
+        _, contours = get_contours(image)
 
         cv2.drawContours(image, contours, -1, (255, 0, 0), 3)
         cv2.imshow('RubexCubex', image)

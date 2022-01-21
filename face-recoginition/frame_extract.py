@@ -3,6 +3,7 @@ from email.mime import image
 
 import cv2
 import numpy as np
+from cv2 import erode
 
 
 class ContourContainer:
@@ -14,10 +15,11 @@ class ContourContainer:
         self.bounding_rect = cv2.boundingRect(self.approx)
 
 def get_contours(frame):
-    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    blurred = cv2.GaussianBlur(gray_frame, (3, 3), 0)
-    canny = cv2.Canny(blurred, 20, 40, 3)
-    # canny = cv2.Sobel(blurred, ddepth=cv2.CV_8UC1, dx=1, dy=1, ksize=5)
+    # gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)[:,:,2]
+
+    blurred = cv2.GaussianBlur(gray_frame, (15, 15), 0)
+    canny = cv2.Canny(blurred, 10, 20, 3)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
     dilated = cv2.dilate(canny, kernel)
 
@@ -28,9 +30,8 @@ def get_contours(frame):
     contour_containers = [ContourContainer(contour) for contour in contours]
     squerishContours = [contour_container for contour_container in contour_containers if is_square(contour_container)]
 
-    # get_cube_countours(squerishContours)
-    approx = [contour_container.approx for contour_container in squerishContours]
-    # approx = [contour_container.approx for contour_container in get_cube_countours(squerishContours)]
+    # approx = [contour_container.approx for contour_container in squerishContours]
+    approx = [contour_container.approx for contour_container in get_cube_countours(squerishContours)]
 
     return dilated, approx
 
@@ -48,8 +49,7 @@ def get_cube_countours(squerishContours):
                         neighbours[contour].append(neighbour)
     
     for key, value in neighbours.items():
-        if len(value) == 8:
-            # print("hej evo me")
+        if len(value) >= 8:
             return value + [key]
 
     return []
