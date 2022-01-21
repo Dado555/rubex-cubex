@@ -105,7 +105,7 @@ finish_state = [['w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'], ['o', 'o', 'o', 'o', '
     ['b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'], ['y', 'y', 'y', 'y', 'y', 'y', 'y', 'y']]
 
 
-def face_move(state, x):
+def face_move_prime(state, x):
     x = 6*8*x
     state[x: x + 6], state[x + 12: x+18], state[x + 42: x + 48], state[x + 30: x + 36] = \
         state[x + 12: x + 18], state[x + 42: x + 48], state[x + 30: x + 36], state[x: x + 6]
@@ -118,7 +118,7 @@ def face_move(state, x):
     #     state[x + 42: x + 48], state[x + 30: x + 36], state[x + 18: x + 24], state[x + 6:x + 12]
 
 
-def face_move_prime(state, x):
+def face_move(state, x):
     x = 6*8*x
     state[x: x + 6], state[x + 12: x+18], state[x + 42: x + 48], state[x + 30: x + 36] = \
         state[x + 30: x + 36], state[x: x + 6], state[x + 12: x+18], state[x + 42: x + 48]
@@ -293,12 +293,12 @@ def rotate_cube(state, rotation_letter, move_index):
         rotate_cube(state, 'F', move_index)
         rotate_cube(state, 'F', move_index)
     elif rotation_letter == 'B': # works
-        face_move(state, move_index)
+        face_move_prime(state, move_index)
         swap(state, 0, 3, 5, 1, 0, 2, 7, 5) # 0, 2, 7, 5    0, 2, 4, 6
         swap(state, 0, 3, 5, 1, 1, 4, 6, 3) # 1, 4, 6, 3    1, 3, 5, 7
         swap(state, 0, 3, 5, 1, 2, 7, 5, 0) # 2, 7, 5, 0    2, 4, 6, 0
     elif rotation_letter == "B'": # works
-        face_move_prime(state, move_index)
+        face_move(state, move_index)
         swap(state, 0, 1, 5, 3, 0, 5, 7, 2) # 0, 5, 7, 2    0, 6, 4, 2
         swap(state, 0, 1, 5, 3, 1, 3, 6, 4) # 1, 3, 6, 4    1, 7, 5, 3
         swap(state, 0, 1, 5, 3, 2, 0, 5, 7) # 2, 0, 5, 7    2, 0, 6, 4
@@ -317,7 +317,7 @@ def scramble(gen_moves):
 
 
 if __name__ == '__main__':
-    scramble_cube(6)
+    scramble_cube(20)
     # rotate_cube(starting_state, "B'", 3)
     # print_cube(starting_state)
     # scrambled_cube, gen_moves = scramble_cube()
