@@ -15,8 +15,65 @@ colours_dict = {
     'y': yellow_center_sq
 }
 
+starting_state = [
+    # prva strana, bela u sredini
+    0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 1, 0,
+    # druga strana, narandzasta
+    1, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0,
+    # treca strana, zelena u sredini
+    0, 1, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0,
+    # cetvrta strana, crvena u sredini
+    0, 0, 1, 0, 0, 0,
+    0, 0, 1, 0, 0, 0,
+    0, 0, 1, 0, 0, 0,
+    0, 0, 1, 0, 0, 0,
+    0, 0, 1, 0, 0, 0,
+    0, 0, 1, 0, 0, 0,
+    0, 0, 1, 0, 0, 0,
+    0, 0, 1, 0, 0, 0,
+    # peta strana, plava u sredini
+    0, 0, 0, 1, 0, 0,
+    0, 0, 0, 1, 0, 0,
+    0, 0, 0, 1, 0, 0,
+    0, 0, 0, 1, 0, 0,
+    0, 0, 0, 1, 0, 0,
+    0, 0, 0, 1, 0, 0,
+    0, 0, 0, 1, 0, 0,
+    0, 0, 0, 1, 0, 0,
+    # sesta strana, zuta u sredini
+    0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 1,
+]
 
-def convert_array_to_color(array):
+
+def conv(array):
     if array[0] == 1:
         return 'o'
     elif array[1] == 1:
@@ -35,10 +92,9 @@ def gen_random_moves(moves_num):
     return [random.choice(moves) for i in range(moves_num)]
 
 
-def scramble_cube():
+def scramble_cube(moves_num):
     # random 25 do 30 poteza za mjesanje kocke
     # moves_num = random.randint(25, 30)
-    moves_num = 25
     gen_moves = [random.choice(moves) for i in range(moves_num)]
     return scramble(gen_moves), gen_moves
 
@@ -50,17 +106,34 @@ finish_state = [['w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'], ['o', 'o', 'o', 'o', '
 
 
 def face_move(state, x):
-    state[x][0], state[x][6], state[x][4], state[x][2] = state[x][6], state[x][4], state[x][2], state[x][0]
-    state[x][1], state[x][7], state[x][5], state[x][3] = state[x][7], state[x][5], state[x][3], state[x][1]
+    x = 6*8*x
+    state[x: x + 6], state[x + 36: x + 42], state[x + 24: x + 30], state[x + 12: x+18] = \
+        state[x + 36: x + 42], state[x + 24: x + 30], state[x + 12: x+18], state[x: x + 6]
+    state[x + 6:x + 12], state[x + 42: x + 48], state[x + 30: x + 36], state[x + 18: x + 24] = \
+        state[x + 42: x + 48], state[x + 30: x + 36], state[x + 18: x + 24], state[x + 6:x + 12]
 
 
 def face_move_prime(state, x):
-    state[x][0], state[x][2], state[x][4], state[x][6] = state[x][2], state[x][4], state[x][6], state[x][0]
-    state[x][1], state[x][3], state[x][5], state[x][7] = state[x][3], state[x][5], state[x][7], state[x][1]
+    x = 6*8*x
+    state[x: x + 6], state[x + 12: x+18], state[x + 24: x + 30], state[x + 36: x + 42] = \
+        state[x + 12: x + 18], state[x + 24: x + 30], state[x + 36: x + 42], state[x: x + 6]
+    state[x + 6:x + 12], state[x + 18: x + 24], state[x + 30: x + 36], state[x + 42: x + 48] = \
+        state[x + 18: x + 24], state[x + 30: x + 36], state[x + 42: x + 48], state[x + 6:x + 12]
 
 
 def swap(state, x1, x2, x3, x4, y1, y2, y3, y4):
-    state[x1][y1], state[x2][y2], state[x3][y3], state[x4][y4] = state[x2][y2], state[x3][y3], state[x4][y4], state[x1][y1]
+    index_1 = 8*6*x1
+    index_2 = 8*6*x2
+    index_3 = 8*6*x3
+    index_4 = 8*6*x4
+
+    x1y1 = index_1 + 6*y1
+    x2y2 = index_2 + 6*y2
+    x3y3 = index_3 + 6*y3
+    x4y4 = index_4 + 6*y4
+
+    state[x1y1:x1y1 + 6], state[x2y2:x2y2 + 6], state[x3y3:x3y3 + 6], state[x4y4:x4y4 + 6] = \
+        state[x2y2:x2y2 + 6], state[x3y3:x3y3 + 6], state[x4y4:x4y4 + 6], state[x1y1:x1y1 + 6]
 
 
 def get_state_copy(state):
@@ -69,25 +142,25 @@ def get_state_copy(state):
 
 def print_cube(state):
     print(
-        "    " + state[0][0] + state[0][1] + state[0][2] + "\n" +
-        "    " + state[0][3] + "w" + state[0][4] + "\n" +
-        "    " + state[0][5] + state[0][6] + state[0][7] + "\n\n" +
+        "    " + conv(state[0:6]) + conv(state[6:12]) + conv(state[12:18]) + "\n" +
+        "    " + conv(state[18:24]) + "w" + conv(state[24:30]) + "\n" +
+        "    " + conv(state[30:36]) + conv(state[36:42]) + conv(state[42:48]) + "\n\n" +
 
-        state[1][0] + state[1][1] + state[1][2] + " " + state[2][0] + state[2][1] +
-        state[2][2] + " " + state[3][0] + state[3][1] + state[3][2] + " " + state[4][0] +
-        state[4][1] + state[4][2] + "\n" +
+        conv(state[48:54]) + conv(state[54:60]) + conv(state[60:66]) + " " + conv(state[96:102]) + conv(state[102:108])
+        + conv(state[108:114]) + " " + conv(state[144:150]) + conv(state[150:156]) + conv(state[156:162]) + " " + conv(state[192:198]) +
+        conv(state[198:204]) + conv(state[204:210]) + "\n" +
 
-        state[1][3] + "o" + state[1][4] + " " + state[2][3] + "g" + state[2][4] + " " +
-        state[3][3] + "r" + state[3][4] + " " + state[4][3] + "b" + state[4][4] + "\n" +
+        conv(state[66:72]) + "o" + conv(state[72:78]) + " " + conv(state[114:120]) + "g" + conv(state[120:126]) + " " +
+        conv(state[162:168]) + "r" + conv(state[168:174]) + " " + conv(state[210:216]) + "b" + conv(state[216:222]) + "\n" +
 
-        state[1][5] + state[1][6] + state[1][7] + " " + state[2][5] + state[2][6] +
-        state[2][7] + " " + state[3][5] + state[3][6] + state[3][7] + " " + state[4][5] +
-        state[4][6] + state[4][7] + "\n\n" +
+        conv(state[78:84]) + conv(state[84:90]) + conv(state[90:96]) + " " + conv(state[126:132]) + conv(state[132:138]) +
+        conv(state[138:144]) + " " + conv(state[174:180]) + conv(state[180:186]) + conv(state[186:192]) + " " + conv(state[222:228]) +
+        conv(state[228:234]) + conv(state[234:240]) + "\n\n" +
 
-        "    " + state[5][0] + state[5][1] + state[5][2] + "\n" +
-        "    " + state[5][3] + "y" + state[5][4] + "\n" +
-        "    " + state[5][5] +
-        state[5][6] + state[5][7] + "\n"
+        "    " + conv(state[240:246]) + conv(state[246:252]) + conv(state[252:258]) + "\n" +
+        "    " + conv(state[258:264]) + "y" + conv(state[264:270]) + "\n" +
+        "    " + conv(state[270:276]) +
+                      conv(state[276:282]) + conv(state[282:288]) + "\n"
     )
 
 
@@ -116,7 +189,7 @@ def convert_from_np_array(state, np_array):
         else:
             state_row = 5
 
-        sqr_color = convert_array_to_color(np_array[side])
+        sqr_color = conv(np_array[side])
         state[state_row][side % 8] = sqr_color
 
         if side % 8 == 7:
@@ -160,9 +233,9 @@ def rotate_cube(state, rotation_letter, move_index):
         rotate_cube(state, 'U', move_index)
     elif rotation_letter == 'D':
         face_move(state, move_index)
-        swap(state, 1, 4, 3, 2, 4, 4, 4, 4)
         swap(state, 1, 4, 3, 2, 5, 5, 5, 5)
         swap(state, 1, 4, 3, 2, 6, 6, 6, 6)
+        swap(state, 1, 4, 3, 2, 7, 7, 7, 7)
     elif rotation_letter == "D'":
         face_move_prime(state, move_index)
         swap(state, 1, 2, 3, 4, 4, 4, 4, 4)
@@ -226,23 +299,27 @@ def rotate_cube(state, rotation_letter, move_index):
 
 
 def scramble(gen_moves):
-    cube = get_state_copy(finish_state)
+    cube = get_state_copy(starting_state)
     for i in gen_moves:
         rotate_cube(cube, i, moves.index(i[0]))
-    print_cube(cube)
+        print('Move: ' + i)
+        print_cube(cube)
     return cube
 
 
 if __name__ == '__main__':
-    scrambled_cube, gen_moves = scramble_cube()
-    output_cube = np.concatenate([np.array([colours_dict[i] for i in scrambled_cube[1]]),
-                                  np.array([colours_dict[i] for i in scrambled_cube[2]]),
-                                  np.array([colours_dict[i] for i in scrambled_cube[3]]),
-                                  np.array([colours_dict[i] for i in scrambled_cube[4]]),
-                                  np.array([colours_dict[i] for i in scrambled_cube[0]]),
-                                  np.array([colours_dict[i] for i in scrambled_cube[5]])], axis=0)
-    print_rubicks(output_cube)
-
-    new_cube = get_state_copy(finish_state)
-    convert_from_np_array(new_cube, output_cube)
-    print_cube(new_cube)
+    # scramble_cube(6)
+    rotate_cube(starting_state, 'D', 5)
+    print_cube(starting_state)
+    # scrambled_cube, gen_moves = scramble_cube()
+    # output_cube = np.concatenate([np.array([colours_dict[i] for i in scrambled_cube[1]]),
+    #                               np.array([colours_dict[i] for i in scrambled_cube[2]]),
+    #                               np.array([colours_dict[i] for i in scrambled_cube[3]]),
+    #                               np.array([colours_dict[i] for i in scrambled_cube[4]]),
+    #                               np.array([colours_dict[i] for i in scrambled_cube[0]]),
+    #                               np.array([colours_dict[i] for i in scrambled_cube[5]])], axis=0)
+    # print_rubicks(output_cube)
+    #
+    # new_cube = get_state_copy(finish_state)
+    # convert_from_np_array(new_cube, output_cube)
+    # print_cube(new_cube)
