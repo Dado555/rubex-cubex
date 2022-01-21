@@ -23,10 +23,14 @@ def get_contours(frame):
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
     dilated = cv2.dilate(canny, kernel)
 
-    (contours, _) = cv2.findContours(dilated.copy(), 
+    (contours, hierarchy) = cv2.findContours(dilated.copy(), 
                                          cv2.RETR_TREE,
                                          cv2.CHAIN_APPROX_SIMPLE)
+    hasChild = hierarchy[0, :, 2]
+
+    nonParentCounturIndexes = (hasChild == -1).nonzero()[0]
     
+    contours = [contours[i] for i in nonParentCounturIndexes]
     contour_containers = [ContourContainer(contour) for contour in contours]
     squerishContours = [contour_container for contour_container in contour_containers if is_square(contour_container)]
 
@@ -57,7 +61,7 @@ def get_cube_countours(squerishContours):
 def get_neighbour_bounding_rects(root_bounding_box):
     (x, y, w, h) = root_bounding_box
     center = (x + w/2, y + h/2)
-    radius = 1.5
+    radius = 1.3
 
     top_left = (center[0] - w * radius, center[1] - h * radius)
     top_mid = (center[0], center[1] - h * radius)
