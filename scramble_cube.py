@@ -108,17 +108,21 @@ finish_state = [['w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'], ['o', 'o', 'o', 'o', '
 def face_move(state, x):
     x = 6*8*x
     state[x: x + 6], state[x + 36: x + 42], state[x + 24: x + 30], state[x + 12: x+18] = \
-        state[x + 36: x + 42], state[x + 24: x + 30], state[x + 12: x+18], state[x: x + 6]
+        state[x + 36: x + 42], state[x + 24: x +
+                                     30], state[x + 12: x+18], state[x: x + 6]
     state[x + 6:x + 12], state[x + 42: x + 48], state[x + 30: x + 36], state[x + 18: x + 24] = \
-        state[x + 42: x + 48], state[x + 30: x + 36], state[x + 18: x + 24], state[x + 6:x + 12]
+        state[x + 42: x + 48], state[x + 30: x +
+                                     36], state[x + 18: x + 24], state[x + 6:x + 12]
 
 
 def face_move_prime(state, x):
     x = 6*8*x
     state[x: x + 6], state[x + 12: x+18], state[x + 24: x + 30], state[x + 36: x + 42] = \
-        state[x + 12: x + 18], state[x + 24: x + 30], state[x + 36: x + 42], state[x: x + 6]
+        state[x + 12: x + 18], state[x + 24: x +
+                                     30], state[x + 36: x + 42], state[x: x + 6]
     state[x + 6:x + 12], state[x + 18: x + 24], state[x + 30: x + 36], state[x + 42: x + 48] = \
-        state[x + 18: x + 24], state[x + 30: x + 36], state[x + 42: x + 48], state[x + 6:x + 12]
+        state[x + 18: x + 24], state[x + 30: x +
+                                     36], state[x + 42: x + 48], state[x + 6:x + 12]
 
 
 def swap(state, x1, x2, x3, x4, y1, y2, y3, y4):
@@ -133,7 +137,8 @@ def swap(state, x1, x2, x3, x4, y1, y2, y3, y4):
     x4y4 = index_4 + 6*y4
 
     state[x1y1:x1y1 + 6], state[x2y2:x2y2 + 6], state[x3y3:x3y3 + 6], state[x4y4:x4y4 + 6] = \
-        state[x2y2:x2y2 + 6], state[x3y3:x3y3 + 6], state[x4y4:x4y4 + 6], state[x1y1:x1y1 + 6]
+        state[x2y2:x2y2 + 6], state[x3y3:x3y3 +
+                                    6], state[x4y4:x4y4 + 6], state[x1y1:x1y1 + 6]
 
 
 def get_state_copy(state):
@@ -146,7 +151,8 @@ def print_cube(state):
         "    " + conv(state[18:24]) + "w" + conv(state[24:30]) + "\n" +
         "    " + conv(state[30:36]) + conv(state[36:42]) + conv(state[42:48]) + "\n\n" +
 
-        conv(state[48:54]) + conv(state[54:60]) + conv(state[60:66]) + " " + conv(state[96:102]) + conv(state[102:108])
+        conv(state[48:54]) + conv(state[54:60]) + conv(state[60:66]
+                                                       ) + " " + conv(state[96:102]) + conv(state[102:108])
         + conv(state[108:114]) + " " + conv(state[144:150]) + conv(state[150:156]) + conv(state[156:162]) + " " + conv(state[192:198]) +
         conv(state[198:204]) + conv(state[204:210]) + "\n" +
 
@@ -160,16 +166,20 @@ def print_cube(state):
         "    " + conv(state[240:246]) + conv(state[246:252]) + conv(state[252:258]) + "\n" +
         "    " + conv(state[258:264]) + "y" + conv(state[264:270]) + "\n" +
         "    " + conv(state[270:276]) +
-                      conv(state[276:282]) + conv(state[282:288]) + "\n"
+        conv(state[276:282]) + conv(state[282:288]) + "\n"
     )
 
 
 def check_if_final(state):
-    for i in range(0, 6):
-        for j in range(0, 8):
-            if state[i][j] != finish_state[i][j]:
-                return False
+    for i in range(0, len(starting_state)):
+        if state[i] != starting_state[i]:
+            return False
     return True
+    # for i in range(0, 6):
+    #     for j in range(0, 8):
+    #         if state[i][j] != finish_state[i][j]:
+    #             return False
+    # return True
 
 
 def convert_from_np_array(state, np_array):
@@ -212,7 +222,8 @@ def convert_to_array_for_nn(state):
     array4 = np.concatenate([colours_dict[i] for i in state[4]])
     array5 = np.concatenate([colours_dict[i] for i in state[0]])
     array6 = np.concatenate([colours_dict[i] for i in state[5]])
-    ret = np.concatenate([array1, array2, array3, array4, array5, array6], axis=0)
+    ret = np.concatenate(
+        [array1, array2, array3, array4, array5, array6], axis=0)
     return np.expand_dims(ret, axis=0)
 
 
