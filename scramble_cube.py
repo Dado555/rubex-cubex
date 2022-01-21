@@ -107,18 +107,28 @@ finish_state = [['w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'], ['o', 'o', 'o', 'o', '
 
 def face_move(state, x):
     x = 6*8*x
-    state[x: x + 6], state[x + 36: x + 42], state[x + 24: x + 30], state[x + 12: x+18] = \
-        state[x + 36: x + 42], state[x + 24: x + 30], state[x + 12: x+18], state[x: x + 6]
-    state[x + 6:x + 12], state[x + 42: x + 48], state[x + 30: x + 36], state[x + 18: x + 24] = \
-        state[x + 42: x + 48], state[x + 30: x + 36], state[x + 18: x + 24], state[x + 6:x + 12]
+    state[x: x + 6], state[x + 12: x+18], state[x + 42: x + 48], state[x + 30: x + 36] = \
+        state[x + 12: x + 18], state[x + 42: x + 48], state[x + 30: x + 36], state[x: x + 6]
+    state[x + 6:x + 12], state[x + 24: x + 30], state[x + 36: x + 42], state[x + 18: x + 24] = \
+        state[x + 24: x + 30], state[x + 36: x + 42], state[x + 18: x + 24], state[x + 6:x + 12]
+
+    # state[x: x + 6], state[x + 36: x + 42], state[x + 24: x + 30], state[x + 12: x+18] = \
+    #     state[x + 36: x + 42], state[x + 24: x + 30], state[x + 12: x+18], state[x: x + 6]
+    # state[x + 6:x + 12], state[x + 42: x + 48], state[x + 30: x + 36], state[x + 18: x + 24] = \
+    #     state[x + 42: x + 48], state[x + 30: x + 36], state[x + 18: x + 24], state[x + 6:x + 12]
 
 
 def face_move_prime(state, x):
     x = 6*8*x
-    state[x: x + 6], state[x + 12: x+18], state[x + 24: x + 30], state[x + 36: x + 42] = \
-        state[x + 12: x + 18], state[x + 24: x + 30], state[x + 36: x + 42], state[x: x + 6]
-    state[x + 6:x + 12], state[x + 18: x + 24], state[x + 30: x + 36], state[x + 42: x + 48] = \
-        state[x + 18: x + 24], state[x + 30: x + 36], state[x + 42: x + 48], state[x + 6:x + 12]
+    state[x: x + 6], state[x + 12: x+18], state[x + 42: x + 48], state[x + 30: x + 36] = \
+        state[x + 30: x + 36], state[x: x + 6], state[x + 12: x+18], state[x + 42: x + 48]
+    state[x + 6:x + 12], state[x + 24: x + 30], state[x + 36: x + 42], state[x + 18: x + 24] = \
+        state[x + 18: x + 24], state[x + 6:x + 12], state[x + 24: x + 30], state[x + 36: x + 42]
+
+    # state[x: x + 6], state[x + 12: x+18], state[x + 24: x + 30], state[x + 36: x + 42] = \
+    #     state[x + 12: x + 18], state[x + 24: x + 30], state[x + 36: x + 42], state[x: x + 6]
+    # state[x + 6:x + 12], state[x + 18: x + 24], state[x + 30: x + 36], state[x + 42: x + 48] = \
+    #     state[x + 18: x + 24], state[x + 30: x + 36], state[x + 42: x + 48], state[x + 6:x + 12]
 
 
 def swap(state, x1, x2, x3, x4, y1, y2, y3, y4):
@@ -142,25 +152,25 @@ def get_state_copy(state):
 
 def print_cube(state):
     print(
-        "    " + conv(state[0:6]) + conv(state[6:12]) + conv(state[12:18]) + "\n" +
-        "    " + conv(state[18:24]) + "w" + conv(state[24:30]) + "\n" +
-        "    " + conv(state[30:36]) + conv(state[36:42]) + conv(state[42:48]) + "\n\n" +
+        "              " + conv(state[0:6]) +"0 "+ conv(state[6:12]) +"1 "+ conv(state[12:18]) +"2 "+ "\n" +
+        "              " + conv(state[18:24]) +"3 "+ "wc " + conv(state[24:30]) +"4 "+ "\n" +
+        "              " + conv(state[30:36]) +"5 "+ conv(state[36:42]) +"6 "+ conv(state[42:48]) +"7 "+ "\n\n" +
 
-        conv(state[48:54]) + conv(state[54:60]) + conv(state[60:66]) + " " + conv(state[96:102]) + conv(state[102:108])
-        + conv(state[108:114]) + " " + conv(state[144:150]) + conv(state[150:156]) + conv(state[156:162]) + " " + conv(state[192:198]) +
-        conv(state[198:204]) + conv(state[204:210]) + "\n" +
+        conv(state[48:54]) +"0 "+ conv(state[54:60]) +"1 "+ conv(state[60:66]) +"2 "+ "     " + conv(state[96:102]) +"0 "+ conv(state[102:108])
+        +"1 "+ conv(state[108:114]) +"2 "+ "     " + conv(state[144:150]) +"0 "+ conv(state[150:156]) +"1 "+ conv(state[156:162]) +"2 "+ "     " + conv(state[192:198]) +"0 "+
+        conv(state[198:204]) +"1 "+ conv(state[204:210]) +"2 "+ "\n" +
 
-        conv(state[66:72]) + "o" + conv(state[72:78]) + " " + conv(state[114:120]) + "g" + conv(state[120:126]) + " " +
-        conv(state[162:168]) + "r" + conv(state[168:174]) + " " + conv(state[210:216]) + "b" + conv(state[216:222]) + "\n" +
+        conv(state[66:72]) +"3 "+ "oc " + conv(state[72:78]) +"4 "+ "     " + conv(state[114:120]) +"3 "+ "gc " + conv(state[120:126]) +"4 "+ "     " +
+        conv(state[162:168]) +"3 "+ "rc " + conv(state[168:174]) +"4 "+ "     " + conv(state[210:216]) +"3 "+ "bc " + conv(state[216:222]) +"4 "+ "\n" +
 
-        conv(state[78:84]) + conv(state[84:90]) + conv(state[90:96]) + " " + conv(state[126:132]) + conv(state[132:138]) +
-        conv(state[138:144]) + " " + conv(state[174:180]) + conv(state[180:186]) + conv(state[186:192]) + " " + conv(state[222:228]) +
-        conv(state[228:234]) + conv(state[234:240]) + "\n\n" +
+        conv(state[78:84]) +"5 "+ conv(state[84:90]) +"6 "+ conv(state[90:96]) +"7 "+ "     " + conv(state[126:132]) +"5 "+ conv(state[132:138]) +"6 "+
+        conv(state[138:144]) +"7 "+ "     " + conv(state[174:180]) +"5 "+ conv(state[180:186]) +"6 "+ conv(state[186:192]) +"7 "+ "     " + conv(state[222:228]) +"5 "+
+        conv(state[228:234]) +"6 "+ conv(state[234:240]) +"7 "+ "\n\n" +
 
-        "    " + conv(state[240:246]) + conv(state[246:252]) + conv(state[252:258]) + "\n" +
-        "    " + conv(state[258:264]) + "y" + conv(state[264:270]) + "\n" +
-        "    " + conv(state[270:276]) +
-                      conv(state[276:282]) + conv(state[282:288]) + "\n"
+        "              " + conv(state[240:246]) +"0 "+ conv(state[246:252]) +"1 "+ conv(state[252:258]) +"2 "+ "\n" +
+        "              " + conv(state[258:264]) +"3 "+ "yc " + conv(state[264:270]) +"4 "+ "\n" +
+        "              " + conv(state[270:276]) +"5 "+
+                      conv(state[276:282]) +"6 "+ conv(state[282:288]) +"7 "+ "\n"
     )
 
 
@@ -217,13 +227,12 @@ def convert_to_array_for_nn(state):
 
 
 def rotate_cube(state, rotation_letter, move_index):
-    if rotation_letter == 'U':
+    if rotation_letter == 'U': # works
         face_move(state, move_index)
-        swap(state, 1, 2, 3, 4, 0, 0, 0, 0)
         swap(state, 1, 2, 3, 4, 0, 0, 0, 0)
         swap(state, 1, 2, 3, 4, 1, 1, 1, 1)
         swap(state, 1, 2, 3, 4, 2, 2, 2, 2)
-    elif rotation_letter == "U'":
+    elif rotation_letter == "U'": # works
         face_move_prime(state, move_index)
         swap(state, 1, 4, 3, 2, 0, 0, 0, 0)
         swap(state, 1, 4, 3, 2, 1, 1, 1, 1)
@@ -231,42 +240,42 @@ def rotate_cube(state, rotation_letter, move_index):
     elif rotation_letter == 'U2':
         rotate_cube(state, 'U', move_index)
         rotate_cube(state, 'U', move_index)
-    elif rotation_letter == 'D':
+    elif rotation_letter == 'D': # works
         face_move(state, move_index)
         swap(state, 1, 4, 3, 2, 5, 5, 5, 5)
         swap(state, 1, 4, 3, 2, 6, 6, 6, 6)
         swap(state, 1, 4, 3, 2, 7, 7, 7, 7)
-    elif rotation_letter == "D'":
+    elif rotation_letter == "D'": # works
         face_move_prime(state, move_index)
-        swap(state, 1, 2, 3, 4, 4, 4, 4, 4)
         swap(state, 1, 2, 3, 4, 5, 5, 5, 5)
         swap(state, 1, 2, 3, 4, 6, 6, 6, 6)
+        swap(state, 1, 2, 3, 4, 7, 7, 7, 7)
     elif rotation_letter == 'D2':
         rotate_cube(state, 'D', move_index)
         rotate_cube(state, 'D', move_index)
-    elif rotation_letter == 'R':
+    elif rotation_letter == 'R': # works
         face_move(state, move_index)
-        swap(state, 0, 2, 5, 4, 2, 2, 2, 6)
-        swap(state, 0, 2, 5, 4, 3, 3, 3, 7)
-        swap(state, 0, 2, 5, 4, 4, 4, 4, 0)
-    elif rotation_letter == "R'":
+        swap(state, 0, 2, 5, 4, 2, 2, 2, 2)
+        swap(state, 0, 2, 5, 4, 4, 4, 4, 4)
+        swap(state, 0, 2, 5, 4, 7, 7, 7, 7)
+    elif rotation_letter == "R'": # works
         face_move_prime(state, move_index)
-        swap(state, 0, 4, 5, 2, 2, 6, 2, 2)
-        swap(state, 0, 4, 5, 2, 3, 7, 3, 3)
-        swap(state, 0, 4, 5, 2, 4, 0, 4, 4)
+        swap(state, 0, 4, 5, 2, 2, 2, 2, 2)
+        swap(state, 0, 4, 5, 2, 4, 4, 4, 4)
+        swap(state, 0, 4, 5, 2, 7, 7, 7, 7)
     elif rotation_letter == 'R2':
         rotate_cube(state, 'R', move_index)
         rotate_cube(state, 'R', move_index)
-    elif rotation_letter == 'L':
+    elif rotation_letter == 'L': # works
         face_move(state, move_index)
-        swap(state, 0, 4, 5, 2, 6, 2, 6, 6)
-        swap(state, 0, 4, 5, 2, 7, 3, 7, 7)
-        swap(state, 0, 4, 5, 2, 0, 4, 0, 0)
-    elif rotation_letter == "L'":
+        swap(state, 0, 4, 5, 2, 0, 0, 0, 0)
+        swap(state, 0, 4, 5, 2, 3, 3, 3, 3)
+        swap(state, 0, 4, 5, 2, 5, 5, 5, 5)
+    elif rotation_letter == "L'": # works
         face_move_prime(state, move_index)
-        swap(state, 0, 2, 5, 4, 6, 6, 6, 2)
-        swap(state, 0, 2, 5, 4, 7, 7, 7, 3)
-        swap(state, 0, 2, 5, 4, 0, 0, 0, 4)
+        swap(state, 0, 2, 5, 4, 0, 0, 0, 0)
+        swap(state, 0, 2, 5, 4, 3, 3, 3, 3)
+        swap(state, 0, 2, 5, 4, 5, 5, 5, 5)
     elif rotation_letter == 'L2':
         rotate_cube(state, 'L', move_index)
         rotate_cube(state, 'L', move_index)
@@ -309,7 +318,7 @@ def scramble(gen_moves):
 
 if __name__ == '__main__':
     # scramble_cube(6)
-    rotate_cube(starting_state, 'D', 5)
+    rotate_cube(starting_state, "F", 3)
     print_cube(starting_state)
     # scrambled_cube, gen_moves = scramble_cube()
     # output_cube = np.concatenate([np.array([colours_dict[i] for i in scrambled_cube[1]]),
