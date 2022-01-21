@@ -19,12 +19,12 @@ def learning(batch_size, max_number_of_scrambles, training_iters, model):  # B, 
         positions_x = []
         for b in range(0, batch_size):  # ako je 32
             moves_for_gen = gen_random_moves(max_number_of_scrambles)
-            cube = Cube()
+            cube = get_state_copy(finish_state)
             positions = []  # njih ce biti 25
             for m in moves_for_gen:
                 rotate_cube(cube, m, moves.index(m[0]))
                 # 24, 23, 22........... #1 - krajnje stanje
-                positions.append(cube.convert_to_np_array())
+                positions.append(convert_to_np_array(cube))
 
             positions_x.extend(positions)
 
@@ -32,21 +32,21 @@ def learning(batch_size, max_number_of_scrambles, training_iters, model):  # B, 
 
         positions_x_reformed = []
         for x in positions_x:
-            cube = Cube()
-            cube.convert_from_np_array(x)
-            init_state = cube.get_state_copy()
+            cube = get_state_copy(finish_state)
+            convert_from_np_array(cube, x)
+            init_state = get_state_copy(cube)
             y_from_moves = []
             for m in moves:
                 rotate_cube(cube, m, moves.index(m[0]))
-                if (cube.check_if_final()):
+                if check_if_final(cube):
                     y_from_moves.append(0)
                     break
                 else:
-                    y = model.predict(cube.convert_to_array_for_nn())
+                    y = model.predict(convert_to_array_for_nn(cube))
                     y_from_moves.append(y)
-                cube.set_state(init_state)  # vracamo
+                cube = get_state_copy(init_state)  # vracamo
 
-            positions_x_reformed.append(cube.convert_to_array_for_nn())
+            positions_x_reformed.append(convert_to_array_for_nn(cube))
             result_y.append(min(y_from_moves))
 
         # train_dataset = tf.data.Dataset.from_tensor_slices(
