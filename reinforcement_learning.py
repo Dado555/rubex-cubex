@@ -1,5 +1,7 @@
+from random import shuffle
 from scramble_cube import *
 from neural_network import *
+import time
 
 
 def learning(batch_size, max_number_of_scrambles, training_iters, model):  # B, K, M
@@ -16,7 +18,7 @@ def learning(batch_size, max_number_of_scrambles, training_iters, model):  # B, 
     θe
     '''
     for iteration in range(0, training_iters):
-        positions_x = []
+        positions_x = []  # niz np array-ova
         for b in range(0, batch_size):  # ako je 32
             moves_for_gen = gen_random_moves(max_number_of_scrambles)
             cube = get_state_copy(starting_state)
@@ -24,39 +26,44 @@ def learning(batch_size, max_number_of_scrambles, training_iters, model):  # B, 
             for m in moves_for_gen:
                 rotate_cube(cube, m, moves.index(m[0]))
                 # 24, 23, 22........... #1 - krajnje stanje
-                positions.append(get_state_copy(cube))
+                positions.append(np.asarray(cube))
 
             positions_x.extend(positions)
 
         result_y = []
 
         positions_x_reformed = []
+        i = 0
         for x in positions_x:
-            # cube = get_state_copy(starting_state)
-            # convert_from_np_array(cube, x)
-            cube = x
+            cube = get_state_copy(x)
             init_state = get_state_copy(cube)
             y_from_moves = []
             for m in moves:
                 rotate_cube(cube, m, moves.index(m[0]))
                 if check_if_final(cube):
-                    y_from_moves.append(0)
+                    y_from_moves.append(10000000)
                     break
                 else:
-                    print("prije predict")
-                    y = model.predict(cube)
-                    print("poslije predict")
+                    y = model(np.expand_dims(cube, axis=0))
+                    # print(y)
+                    #y = model.predict(np.expand_dims(cube, axis=0))
+                    #y = 100
                     y_from_moves.append(y)
                 cube = get_state_copy(init_state)  # vracamo
 
+            max_y = max(y_from_moves)
+            # print(max_y)
             positions_x_reformed.append(cube)
-            result_y.append(min(y_from_moves))
+            result_y.append(max_y)
+            # i += 1
+            # print("current iter: " + str(i) +
+            #       ", y value is: " + str(min(y_from_moves)))
 
         # train_dataset = tf.data.Dataset.from_tensor_slices(
         #     (, result_y)).batch(32)
         print("training epoche ")
         model.fit(np.asarray(positions_x_reformed, dtype=np.float32),
-                  np.asarray(result_y, dtype=np.float32), batch_size=32)
+                  np.asarray(result_y, dtype=np.float32), batch_size=32, shuffle=False)
 
     model_json = model.to_json()
     with open("model_rl.json", "w") as json_file:
