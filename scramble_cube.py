@@ -4,7 +4,7 @@ from rubicks_visualize_console import *
 import copy
 
 moves = ["U", "L", "F", "R", "B", "D",
-         "U'", "D'", "F'", "B'", "R'", "L'"]
+         "U'", "L'", "F'", "R'", "B'", "D'"]
 
 colours_dict = {
     'w': white_center_sq,
@@ -175,10 +175,9 @@ def print_cube(state):
 
 
 def check_if_final(state):
-    for i in range(0, 6):
-        for j in range(0, 8):
-            if state[i][j] != finish_state[i][j]:
-                return False
+    for i in range(0, 288):
+        if state[i] != starting_state[i]:
+            return False
     return True
 
 
@@ -307,12 +306,34 @@ def rotate_cube(state, rotation_letter, move_index):
         rotate_cube(state, 'B', move_index)
 
 
+def get_oposite(move):
+    if len(move) == 1:
+        return moves[moves.index(move[0]) + 6]
+    else:
+        return moves[moves.index(move[0])]
+
+
 def scramble(gen_moves):
     cube = get_state_copy(starting_state)
+    print(gen_moves)
+    print(gen_moves[::-1])
+    print([get_oposite(i) for i in gen_moves[::-1]])
+
     for i in gen_moves:
         rotate_cube(cube, i, moves.index(i[0]))
         print('Move: ' + i)
         print_cube(cube)
+
+    print("***************")
+    print("SOLVING CUBE: ")
+    print("***************")
+
+    # get oposite moves for reversed list of moves, to solve cube
+    for i in gen_moves[::-1]:
+        rotate_cube(cube, get_oposite(i), moves.index(i[0]))
+        print("Move: " + get_oposite(i))
+        print_cube(cube)
+
     return cube
 
 
