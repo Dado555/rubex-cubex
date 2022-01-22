@@ -25,8 +25,7 @@ def learning(batch_size, max_number_of_scrambles, training_iters, model):  # B, 
             positions = []  # njih ce biti 25
             for m in moves_for_gen:
                 rotate_cube(cube, m, moves.index(m[0]))
-                # 24, 23, 22........... #1 - krajnje stanje
-                positions.append(np.asarray(cube))
+                positions.append(get_state_copy(cube))
 
             positions_x.extend(positions)
 
@@ -35,32 +34,26 @@ def learning(batch_size, max_number_of_scrambles, training_iters, model):  # B, 
         positions_x_reformed = []
         i = 0
         for x in positions_x:
-            cube = get_state_copy(x)
+            cube = x
             init_state = get_state_copy(cube)
             y_from_moves = []
             for m in moves:
                 rotate_cube(cube, m, moves.index(m[0]))
                 if check_if_final(cube):
-                    y_from_moves.append(10000000)
+                    y_from_moves.append(0)
                     break
                 else:
                     y = model(np.expand_dims(cube, axis=0))
-                    # print(y)
-                    #y = model.predict(np.expand_dims(cube, axis=0))
-                    #y = 100
-                    y_from_moves.append(y)
+                    y_from_moves.append(abs(y))
                 cube = get_state_copy(init_state)  # vracamo
 
-            max_y = max(y_from_moves)
-            # print(max_y)
-            positions_x_reformed.append(cube)
+            max_y = min(y_from_moves)
+            positions_x_reformed.append(np.array(cube))
             result_y.append(max_y)
             # i += 1
             # print("current iter: " + str(i) +
             #       ", y value is: " + str(min(y_from_moves)))
 
-        # train_dataset = tf.data.Dataset.from_tensor_slices(
-        #     (, result_y)).batch(32)
         print("training epoche ")
         model.fit(np.asarray(positions_x_reformed, dtype=np.float32),
                   np.asarray(result_y, dtype=np.float32), batch_size=32, shuffle=False)
