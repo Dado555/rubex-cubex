@@ -17,7 +17,6 @@ class RubexCubex:
         return ""
 
     def add_face(self):
-        print(self.preview_state)
         self.faces[self.preview_state[4]] = self.preview_state.copy()
         print("added " + self.preview_state[4] + " face")
     
@@ -35,7 +34,13 @@ class RubexCubex:
             self.face_states = {}
     
     def print_faces(self):
-        print(self.faces)
+        final_faces = []
+        for value in self.faces.values():
+            face = []
+            for color in value.values():
+                face.append(color[0])
+            final_faces.append(face)
+        print(final_faces)
     
 def show_webcam():
     cube = RubexCubex()
@@ -82,9 +87,9 @@ def show_webcam():
             if new_state != {}:
                 cube.update_preview_state(new_state)
 
-                # add face
-                if cv2.waitKey(1) == ord('f'):
-                    cube.add_face()
+            # add face
+            if cv2.waitKey(1) == ord('f'):
+                cube.add_face()
 
         draw_bounding_rect(image, contours)
         cv2.imshow('RubexCubex', image)

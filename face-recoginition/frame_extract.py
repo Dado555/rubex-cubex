@@ -37,9 +37,9 @@ def get_contours(frame):
 
     y_sorted = sorted(bounding_rects, key=lambda item: item[1])
 
-    top_row = sorted(y_sorted[0:3], key=lambda item: item[0])
-    middle_row = sorted(y_sorted[3:6], key=lambda item: item[0])
-    bottom_row = sorted(y_sorted[6:9], key=lambda item: item[0])
+    top_row = sorted(y_sorted[0:3], key=lambda item: - item[0])
+    middle_row = sorted(y_sorted[3:6], key=lambda item: - item[0])
+    bottom_row = sorted(y_sorted[6:9], key=lambda item: - item[0])
 
     sorted_bounding_rects = top_row + middle_row + bottom_row
 
