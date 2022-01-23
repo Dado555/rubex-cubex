@@ -1,6 +1,7 @@
 from keras.models import model_from_json
 from scramble_cube import *
 import numpy as np
+from a_star import *
 
 if __name__ == "__main__":
     json_file = open('kaggle_model/supervised_2/model2_rl.json', 'r')
@@ -12,12 +13,13 @@ if __name__ == "__main__":
 
     loaded_model.compile(loss="mean_squared_error", optimizer="adam")
 
-    moves_for_gen = gen_random_moves(25)
+    moves_for_gen = gen_random_moves(7)
+    print(moves_for_gen)
     cube = get_state_copy(starting_state)
-    positions = []  # njih ce biti 25
     for m in moves_for_gen:
         rotate_cube(cube, m, moves.index(m[0]))
-        positions.append(get_state_copy(cube))
 
-    predicted = loaded_model.predict(np.asarray(positions))
-    print(predicted)
+    init_search_state = get_state_copy(cube)
+    print("starting search")
+    result = all_star(init_search_state, loaded_model)
+    print(result)
