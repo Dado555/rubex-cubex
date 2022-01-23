@@ -163,4 +163,5 @@ class ColorDetector:
 
 
 if __name__ == '__main__':
-    print(get_closest_color((0, 165, 240)))
+    color_detector = ColorDetector()
+    print(color_detector.get_closest_color((0, 165, 240)))
