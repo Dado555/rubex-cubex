@@ -1,7 +1,9 @@
 import cv2
 
+from color_detection import estimate_colors
 from frame_extract import get_contours
 
+preview_state = {}
 
 def show_webcam():
     cam = cv2.VideoCapture(0)
@@ -14,6 +16,8 @@ def show_webcam():
         # cv2.drawContours(image, contours, -1, (255, 0, 0), 3)
         draw_bounding_rect(image, contours)
         cv2.imshow('RubexCubex', image)
+
+        estimate_colors(image, contours, preview_state)
 
         if cv2.waitKey(1) == 27: 
             break
