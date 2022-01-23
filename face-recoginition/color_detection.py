@@ -115,40 +115,52 @@ def ciede2000(Lab_1, Lab_2):
     dE_00 = math.sqrt(f_L**2 + f_C**2 + f_H**2 + R_T * f_C * f_H)
     return dE_00
 
-colors = {
-    'blue': (255, 0, 0),
-    'green': (0, 255, 0),
-    'red': (0, 0, 255),
-    'yellow': (255, 255, 0),
-    'orange': (0, 165, 255),
-    'white': (255, 255, 255),
-}
+class ColorDetector:
 
-def get_dominant_color(image, bounding_rect):
-    (x, y, w, h) = bounding_rect
-    area = image[x:x+w, y:y+h, :]
+    def __init__(self) -> None:    
+        self.colors = {
+            'blue': (255, 0, 0),
+            'green': (0, 255, 0),
+            'red': (0, 0, 255),
+            'yellow': (255, 255, 0),
+            'orange': (0, 165, 255),
+            'white': (255, 255, 255),
+        }
 
-    area.mean(axis=0).mean(axis=0)
-    flat = np.float32(area.reshape(-1, 3))
+    def set_colors(self, new_colors):
+        self.colors = new_colors
     
-    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, 0.1)
-    num_of_colors = 1
-    _, labels, palette = cv2.kmeans(flat, num_of_colors, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
-    _, counts = np.unique(labels, return_counts=True)
-    dominant = palette[np.argmax(counts)]
+    def get_dominant_color(self, image, bounding_rect):
+        (x, y, w, h) = bounding_rect
+        area = image[y+7:y+h-7, x+14:x+w-14, :]
 
-    return tuple(dominant)
-    
+        area.mean(axis=0).mean(axis=0)
+        flat = np.float32(area.reshape(-1, 3))
+        
+        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, 0.1)
+        num_of_colors = 1
+        _, labels, palette = cv2.kmeans(flat, num_of_colors, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
+        _, counts = np.unique(labels, return_counts=True)
+        dominant = palette[np.argmax(counts)]
 
-def get_closest_color(input_color):
-    distances = []
-    for color, value in colors.items():
-        distances.append([color, ciede2000(bgr2lab(value), bgr2lab(input_color))])
-    closest_color = min(distances, key=lambda distance: distance[1])
-    return closest_color
+        return tuple(dominant)
+        
+
+    def get_closest_color(self, input_color):
+        distances = []
+        for color, value in self.colors.items():
+            distances.append([color, ciede2000(bgr2lab(value), bgr2lab(input_color))])
+        closest_color = min(distances, key=lambda distance: distance[1])
+        return closest_color[0]
 
 
-def estimate_colors(image, contours, preview_state):
-    for index, contour in enumerate(contours):
-        dominant_color = get_dominant_color(image, contour)
-        preview_state[index] = get_closest_color(dominant_color)
+    def estimate_colors(self, image, contours):
+        new_state = {}
+        for index, contour in enumerate(contours):
+            dominant_color = self.get_dominant_color(image, contour)
+            new_state[index] = self.get_closest_color(dominant_color)
+        return new_state
+
+
+if __name__ == '__main__':
+    print(get_closest_color((0, 165, 240)))
