@@ -4,6 +4,7 @@ import cv2
 
 from color_detection import ColorDetector
 from frame_extract import get_contours
+from utils import *
 
 
 class RubexCubex:
@@ -12,6 +13,7 @@ class RubexCubex:
         self.faces = {}
         self.preview_state = {}
         self.face_states = {}
+        self.output_order = ['white', 'orange', 'green', 'red', 'blue', 'yellow']
     
     def export_faces(self):
         return ""
@@ -36,12 +38,17 @@ class RubexCubex:
     
     def print_faces(self):
         final_faces = []
-        for value in self.faces.values():
+        for order_color in self.output_order:
+            if order_color not in self.faces.keys():
+                continue
+            value = self.faces[order_color]
             face = []
             for color in value.values():
                 face.append(color[0])
-            final_faces.append(face)
-        print(final_faces)
+            final_faces.append(face[:4] + face[5:])
+        nn_array = convert_to_nn_array(final_faces)
+        print_cube(nn_array)
+        print(nn_array)
     
 def show_webcam():
     cube = RubexCubex()
@@ -141,7 +148,12 @@ def draw_saved_face(image, face, colors, color):
         color =  colors[face[index]] if face != [] else (192, 192, 192)
         draw_preview_rect(image, (x + 20 * x_offset, y + 20 * y_offset), color)
 
-
+def convert_to_nn_array(final_faces):
+    nn_array = []
+    for face in final_faces:
+        for color in face:
+            nn_array.extend(colours_dict[color])
+    return nn_array
 
 def main():
     show_webcam()
@@ -149,3 +161,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    # nesto = convert_to_nn_array([['o', 'w', 'o', 'g', 'b', 'w', 'w', 'g'], ['b', 'o', 'o', 'b', 'g', 'y', 'r', 'r'], ['g', 'g', 'y', 'y', 'g', 'b', 'b', 'w'], ['r', 'r', 'b', 'r', 'o', 'r', 'o', 'w'], ['y', 'r', 'w', 'w', 'w', 'b', 'o', 'g'], ['y', 'y', 'g', 'y', 'y', 'o', 'b', 'r']])
