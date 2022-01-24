@@ -3,11 +3,11 @@ from scramble_cube import *
 import numpy as np
 
 if __name__ == "__main__":
-    json_file = open('kaggle_model/supervised_2/model2_rl.json', 'r')
+    json_file = open('kaggle_model/supervised_3/model_rl_like.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     loaded_model = model_from_json(loaded_model_json)
-    loaded_model.load_weights("kaggle_model/supervised_2/model2_rl.h5")
+    loaded_model.load_weights("kaggle_model/supervised_3/model_rl_like.h5")
     print("Loaded model from disk")
 
     loaded_model.compile(loss="mean_squared_error", optimizer="adam")

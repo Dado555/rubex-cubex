@@ -3,8 +3,45 @@ import numpy as np
 from rubicks_visualize_console import *
 import copy
 
-moves = ["U", "L", "F", "R", "B", "D",
-         "U'", "L'", "F'", "R'", "B'", "D'"]
+orange_center_sq = [1, 0, 0, 0, 0, 0]
+green_center_sq = [0, 1, 0, 0, 0, 0]
+red_center_sq = [0, 0, 1, 0, 0, 0]
+blue_center_sq = [0, 0, 0, 1, 0, 0]
+white_center_sq = [0, 0, 0, 0, 1, 0]
+yellow_center_sq = [0, 0, 0, 0, 0, 1]
+
+moves = ["U", "L", "F", "R", "B", "D", "U'", "L'", "F'", "R'", "B'", "D'"]
+
+moves_dict_for_possible = {
+    "U": ["U", "L", "F", "R", "B", "D", "L'", "F'", "R'", "B'", "D'"],
+    "L": ["U", "L", "F", "R", "B", "D", "U'", "F'", "R'", "B'", "D'"],
+    "F": ["U", "L", "F", "R", "B", "D", "U'", "L'", "R'", "B'", "D'"],
+    "R": ["U", "L", "F", "R", "B", "D", "U'", "L'", "F'", "B'", "D'"],
+    "B": ["U", "L", "F", "R", "B", "D", "U'", "L'", "F'", "R'", "D'"],
+    "D": ["U", "L", "F", "R", "B", "D", "U'", "L'", "F'", "R'", "B'"],
+    "U'": ["L", "F", "R", "B", "D", "U'", "L'", "F'", "R'", "B'", "D'"],
+    "L'": ["U", "F", "R", "B", "D", "U'", "L'", "F'", "R'", "B'", "D'"],
+    "F'": ["U", "L", "R", "B", "D", "U'", "L'", "F'", "R'", "B'", "D'"],
+    "R'": ["U", "L", "F", "B", "D", "U'", "L'", "F'", "R'", "B'", "D'"],
+    "B'": ["U", "L", "F", "R", "D", "U'", "L'", "F'", "R'", "B'", "D'"],
+    "D'": ["U", "L", "F", "R", "B", "U'", "L'", "F'", "R'", "B'", "D'"]
+}
+
+
+def get_random_move(previous):
+    if previous:
+        return random.choice(moves_dict_for_possible[previous])
+    return random.choice(moves)
+
+
+def get_random_moves_no_recur(moves_num):
+    rand_move = None
+    res = []
+    for i in range(moves_num):
+        rand_move = get_random_move(rand_move)
+        res.append(rand_move)
+    return res
+
 
 colours_dict = {
     'w': white_center_sq,
