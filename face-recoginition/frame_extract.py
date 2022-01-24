@@ -2,8 +2,6 @@ import re
 from email.mime import image
 
 import cv2
-import numpy as np
-from cv2 import erode
 
 
 class ContourContainer:
