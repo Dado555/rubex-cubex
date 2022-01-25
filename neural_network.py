@@ -12,8 +12,10 @@ def create_NN():
     model = Sequential()  # [Input(units=288, input_shape=[288], batch_size=1)]
     model.add(Dense(units=512, input_shape=(288,), activation="relu"))
     model.add(BatchNormalization())
-    # model.add(Dense(512, activation="relu"))
-    #model.add(Dense(256, activation="relu"))
+    model.add(Dense(512, activation="relu"))
+    model.add(BatchNormalization())
+    model.add(Dense(256, activation="relu"))
+    model.add(BatchNormalization())
     model.add(Dense(128, activation="relu"))
     model.add(BatchNormalization())
     model.add(Dense(1, activation="relu"))

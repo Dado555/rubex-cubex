@@ -3,16 +3,16 @@ from scramble_cube import *
 import numpy as np
 
 if __name__ == "__main__":
-    json_file = open('kaggle_model/supervised_3/model_rl_like.json', 'r')
+    json_file = open('model_rl5.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     loaded_model = model_from_json(loaded_model_json)
-    loaded_model.load_weights("kaggle_model/supervised_3/model_rl_like.h5")
+    loaded_model.load_weights("model_rl5.json.h5")
     print("Loaded model from disk")
 
     loaded_model.compile(loss="mean_squared_error", optimizer="adam")
 
-    moves_for_gen = gen_random_moves(25)
+    moves_for_gen = get_random_moves_no_recur(15)
     cube = get_state_copy(starting_state)
     positions = []  # njih ce biti 25
     for m in moves_for_gen:
