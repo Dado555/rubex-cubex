@@ -129,63 +129,6 @@ def gen_random_moves(moves_num):
     return [random.choice(moves) for i in range(moves_num)]
 
 
-moves_dict_for_possible = {
-    "U": ["U", "L", "F", "R", "B", "D", "L'", "F'", "R'", "B'", "D'"],
-    "L": ["U", "L", "F", "R", "B", "D", "U'", "F'", "R'", "B'", "D'"],
-    "F": ["U", "L", "F", "R", "B", "D", "U'", "L'", "R'", "B'", "D'"],
-    "R": ["U", "L", "F", "R", "B", "D", "U'", "L'", "F'", "B'", "D'"],
-    "B": ["U", "L", "F", "R", "B", "D", "U'", "L'", "F'", "R'", "D'"],
-    "D": ["U", "L", "F", "R", "B", "D", "U'", "L'", "F'", "R'", "B'"],
-    "U'": ["L", "F", "R", "B", "D", "U'", "L'", "F'", "R'", "B'", "D'"],
-    "L'": ["U", "F", "R", "B", "D", "U'", "L'", "F'", "R'", "B'", "D'"],
-    "F'": ["U", "L", "R", "B", "D", "U'", "L'", "F'", "R'", "B'", "D'"],
-    "R'": ["U", "L", "F", "B", "D", "U'", "L'", "F'", "R'", "B'", "D'"],
-    "B'": ["U", "L", "F", "R", "D", "U'", "L'", "F'", "R'", "B'", "D'"],
-    "D'": ["U", "L", "F", "R", "B", "U'", "L'", "F'", "R'", "B'", "D'"]
-}
-
-
-def get_random_move(previous):
-    if previous:
-        return random.choice(moves_dict_for_possible[previous])
-    return random.choice(moves)
-
-
-def get_random_moves_no_recur(moves_num):
-    rand_move = None
-    res = []
-    for i in range(moves_num):
-        rand_move = get_random_move(rand_move)
-        res.append(rand_move)
-    return res
-
-
-def get_all_possible_moves_combination(moves_num):
-    iter = moves_num
-    arr = [[] for i in range(12)]
-    counter = 0
-    for move in moves:
-        # arr[counter].append(move)
-        new_arr = [[move] for i in range(12)]
-        iter -= 1
-        while iter > 0:
-            cnt_inner = 0
-            for m in moves:
-                if m == get_oposite(move):
-                    continue
-                # arr[counter].append(m)
-                new_arr[cnt_inner].append(m)
-                if iter-1 == 0 and len(new_arr[cnt_inner]) == moves_num:
-                    arr[counter].append(new_arr)
-                cnt_inner += 1
-            iter -= 1
-            if iter == 0:
-                break
-        iter = moves_num
-        counter += 1
-    return arr
-
-
 def scramble_cube(moves_num):
     # random 25 do 30 poteza za mjesanje kocke
     # moves_num = random.randint(25, 30)
@@ -207,6 +150,7 @@ def face_move_prime(state, x):
     state[x + 6:x + 12], state[x + 24: x + 30], state[x + 36: x + 42], state[x + 18: x + 24] = \
         state[x + 24: x + 30], state[x + 36: x +
                                      42], state[x + 18: x + 24], state[x + 6:x + 12]
+
     # state[x: x + 6], state[x + 36: x + 42], state[x + 24: x + 30], state[x + 12: x+18] = \
     #     state[x + 36: x + 42], state[x + 24: x + 30], state[x + 12: x+18], state[x: x + 6]
     # state[x + 6:x + 12], state[x + 42: x + 48], state[x + 30: x + 36], state[x + 18: x + 24] = \
@@ -221,6 +165,7 @@ def face_move(state, x):
     state[x + 6:x + 12], state[x + 24: x + 30], state[x + 36: x + 42], state[x + 18: x + 24] = \
         state[x + 18: x + 24], state[x + 6:x +
                                      12], state[x + 24: x + 30], state[x + 36: x + 42]
+
     # state[x: x + 6], state[x + 12: x+18], state[x + 24: x + 30], state[x + 36: x + 42] = \
     #     state[x + 12: x + 18], state[x + 24: x + 30], state[x + 36: x + 42], state[x: x + 6]
     # state[x + 6:x + 12], state[x + 18: x + 24], state[x + 30: x + 36], state[x + 42: x + 48] = \
@@ -358,27 +303,27 @@ def rotate_cube(state, rotation_letter, move_index):
         rotate_cube(state, 'D', move_index)
     elif rotation_letter == 'R':  # works
         face_move(state, move_index)
-        swap(state, 0, 2, 5, 4, 2, 2, 2, 5)
-        swap(state, 0, 2, 5, 4, 4, 4, 4, 3)
-        swap(state, 0, 2, 5, 4, 7, 7, 7, 0)
+        swap(state, 0, 2, 5, 4, 2, 2, 2, 2)
+        swap(state, 0, 2, 5, 4, 4, 4, 4, 4)
+        swap(state, 0, 2, 5, 4, 7, 7, 7, 7)
     elif rotation_letter == "R'":  # works
         face_move_prime(state, move_index)
-        swap(state, 0, 4, 5, 2, 2, 5, 2, 2)
-        swap(state, 0, 4, 5, 2, 4, 3, 4, 4)
-        swap(state, 0, 4, 5, 2, 7, 0, 7, 7)
+        swap(state, 0, 4, 5, 2, 2, 2, 2, 2)
+        swap(state, 0, 4, 5, 2, 4, 4, 4, 4)
+        swap(state, 0, 4, 5, 2, 7, 7, 7, 7)
     elif rotation_letter == 'R2':
         rotate_cube(state, 'R', move_index)
         rotate_cube(state, 'R', move_index)
     elif rotation_letter == 'L':  # works
         face_move(state, move_index)
-        swap(state, 0, 4, 5, 2, 0, 7, 0, 0)
-        swap(state, 0, 4, 5, 2, 3, 4, 3, 3)
-        swap(state, 0, 4, 5, 2, 5, 2, 5, 5)
+        swap(state, 0, 4, 5, 2, 0, 0, 0, 0)
+        swap(state, 0, 4, 5, 2, 3, 3, 3, 3)
+        swap(state, 0, 4, 5, 2, 5, 5, 5, 5)
     elif rotation_letter == "L'":  # works
         face_move_prime(state, move_index)
-        swap(state, 0, 2, 5, 4, 0, 0, 0, 7)
-        swap(state, 0, 2, 5, 4, 3, 3, 3, 4)
-        swap(state, 0, 2, 5, 4, 5, 5, 5, 2)
+        swap(state, 0, 2, 5, 4, 0, 0, 0, 0)
+        swap(state, 0, 2, 5, 4, 3, 3, 3, 3)
+        swap(state, 0, 2, 5, 4, 5, 5, 5, 5)
     elif rotation_letter == 'L2':
         rotate_cube(state, 'L', move_index)
         rotate_cube(state, 'L', move_index)
@@ -396,12 +341,12 @@ def rotate_cube(state, rotation_letter, move_index):
         rotate_cube(state, 'F', move_index)
         rotate_cube(state, 'F', move_index)
     elif rotation_letter == 'B':  # works
-        face_move(state, move_index)
+        face_move_prime(state, move_index)
         swap(state, 0, 3, 5, 1, 0, 2, 7, 5)  # 0, 2, 7, 5    0, 2, 4, 6
         swap(state, 0, 3, 5, 1, 1, 4, 6, 3)  # 1, 4, 6, 3    1, 3, 5, 7
         swap(state, 0, 3, 5, 1, 2, 7, 5, 0)  # 2, 7, 5, 0    2, 4, 6, 0
     elif rotation_letter == "B'":  # works
-        face_move_prime(state, move_index)
+        face_move(state, move_index)
         swap(state, 0, 1, 5, 3, 0, 5, 7, 2)  # 0, 5, 7, 2    0, 6, 4, 2
         swap(state, 0, 1, 5, 3, 1, 3, 6, 4)  # 1, 3, 6, 4    1, 7, 5, 3
         swap(state, 0, 1, 5, 3, 2, 0, 5, 7)  # 2, 0, 5, 7    2, 0, 6, 4
