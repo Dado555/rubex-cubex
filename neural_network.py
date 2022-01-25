@@ -1,10 +1,10 @@
-import tensorflow as tf
 import numpy as np
-from tensorflow import *
+import tensorflow as tf
 from keras import *
 from keras.layers import *
 from keras.models import *
 from keras_preprocessing import *
+from tensorflow import *
 from tensorflow._api.v2 import data
 
 

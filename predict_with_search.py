@@ -1,7 +1,9 @@
-import time
-from keras.models import model_from_json
-from a_star import *
 import signal
+import time
+
+from keras.models import model_from_json
+
+from greedy_search import *
 
 '''
     ["U'", "R'", "U'", "B'", 'F', 'L', "R'", 'L', "U'", "B'"]

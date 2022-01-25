@@ -1,10 +1,12 @@
 from collections import Counter
+
 import cv2
+from greedy_search import *
+from keras.models import model_from_json
+
 from color_detection import ColorDetector
 from frame_extract import get_contours
 from utils import *
-from keras.models import model_from_json
-from a_star import *
 
 
 class RubexCubex:
@@ -40,6 +42,7 @@ class RubexCubex:
         nn_array = self.get_nn_array()
         print_cube(nn_array)
         print(nn_array)
+
 
     def get_nn_array(self):
         final_faces = []
@@ -82,9 +85,9 @@ def show_webcam():
         # ESC to exit
         if cv2.waitKey(1) == 27:
             cube.print_faces()
-            # loaded_model = load_model()
-            # result = all_star(cube.get_nn_array(), loaded_model)
-            # print("result: " + str(result))
+            loaded_model = load_model()
+            result = all_star(cube.get_nn_array(), loaded_model)
+            print("result: " + str(result))
             break
 
         if in_calibration_mode:
@@ -188,9 +191,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # nesto = convert_to_nn_array([['o', 'w', 'o', 'g', 'b', 'w', 'w', 'g'], ['b', 'o', 'o', 'b', 'g', 'y', 'r', 'r'], ['g', 'g', 'y', 'y', 'g', 'b', 'b', 'w'], ['r', 'r', 'b', 'r', 'o', 'r', 'o', 'w'], ['y', 'r', 'w', 'w', 'w', 'b', 'o', 'g'], ['y', 'y', 'g', 'y', 'y', 'o', 'b', 'r']])
-    # state = [0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]
-    # print_cube(state)
-    # model = load_model('../model_rl2.json', '../model_rl2.json.h5')
-    # result = all_star(state, model)
-    # print("result: " + str(result))
+    
