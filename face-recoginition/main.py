@@ -37,6 +37,11 @@ class RubexCubex:
             self.face_states = {}
     
     def print_faces(self):
+        nn_array = self.get_nn_array()
+        print_cube(nn_array)
+        print(nn_array)
+    
+    def get_nn_array(self):
         final_faces = []
         for order_color in self.output_order:
             if order_color not in self.faces.keys():
@@ -46,9 +51,7 @@ class RubexCubex:
             for color in value.values():
                 face.append(color[0])
             final_faces.append(face[:4] + face[5:])
-        nn_array = convert_to_nn_array(final_faces)
-        print_cube(nn_array)
-        print(nn_array)
+        return convert_to_nn_array(final_faces)
     
 def show_webcam():
     cube = RubexCubex()
@@ -162,3 +165,4 @@ def main():
 if __name__ == '__main__':
     main()
     # nesto = convert_to_nn_array([['o', 'w', 'o', 'g', 'b', 'w', 'w', 'g'], ['b', 'o', 'o', 'b', 'g', 'y', 'r', 'r'], ['g', 'g', 'y', 'y', 'g', 'b', 'b', 'w'], ['r', 'r', 'b', 'r', 'o', 'r', 'o', 'w'], ['y', 'r', 'w', 'w', 'w', 'b', 'o', 'g'], ['y', 'y', 'g', 'y', 'y', 'o', 'b', 'r']])
+    
