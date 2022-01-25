@@ -31,7 +31,7 @@ def learning(model):  # B, K, M
     states = []
     results = []
 
-    for file_num in range(25):
+    for file_num in range(16):
         file = open('data/dataset_states_gen_100k_' + str(int(file_num)) + '.bin', 'rb')
         data = pickle.load(file)
         file.close()
@@ -62,9 +62,9 @@ def learning(model):  # B, K, M
     np.asarray(results, dtype=np.float32), batch_size=512, shuffle=True, epochs=150)
 
     model_json = model.to_json()
-    with open("model_rl3.json", "w") as json_file:
+    with open("model_rl.json", "w") as json_file:
         json_file.write(model_json)
-    model.save_weights("model_rl3.json.h5")
+    model.save_weights("model_rl.json.h5")
     print("Saved model to disk")
     print('djura')
 
@@ -94,7 +94,7 @@ def learning2(model, num_scrambles, num_states):  # B, K, M
 
 
 def learning3(model, num_scrambles, num_states):  # B, K, M
-    generate_dataset_2()
+    # generate_dataset_2()
 
     states = []
     results = []
@@ -120,25 +120,27 @@ def learning3(model, num_scrambles, num_states):  # B, K, M
 
 
 def learning4(model):  # B, K, M
-    states = []
+    generate_dataset_2(16, 2560000)
     results = []
 
-    file = open('data/dataset_states_gen_2M.bin', 'rb')
+    file = open('data/dataset_states_gen_2_560_M.bin', 'rb')
     states = pickle.load(file)
 
-    for i in range(4):
-        results.extend([i+1] * 10000)
-    results.extend([5] * 40000)
-    for i in range(6, 26):
-        results.extend([i] * 96000)
+    # for i in range(4):
+    #     results.extend([i+1] * 10000)
+    # results.extend([5] * 47002)
+    # for i in range(6, 17):
+    #     results.extend([i] * 224818)
+    for i in range(16):
+        results.extend([i+1] * int(2560000/16))
 
     model.fit(np.asarray(states, dtype=np.float32),
     np.asarray(results, dtype=np.float32), batch_size=1024, shuffle=True, epochs=150)
 
     model_json = model.to_json()
-    with open("model_rl6.json", "w") as json_file:
+    with open("model_rl2.json", "w") as json_file:
         json_file.write(model_json)
-    model.save_weights("model_rl6.json.h5")
+    model.save_weights("model_rl2.json.h5")
     print("Saved model to disk")
     print('djura')
 
@@ -146,13 +148,26 @@ def learning4(model):  # B, K, M
 if __name__ == '__main__':
     # model = create_NN()
     # learning(model)
-    json_file = open('model_rl5.json', 'r')
+
+    json_file = open('model_rl.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     loaded_model = model_from_json(loaded_model_json)
-    loaded_model.load_weights("model_rl5.json.h5")
+    loaded_model.load_weights("model_rl.json.h5")
     print("Loaded model from disk")
 
     loaded_model.compile(loss="mean_squared_error", optimizer="adam")
 
     learning4(loaded_model)
+
+    for i in range(8):
+        json_file = open('model_rl2.json', 'r')
+        loaded_model_json = json_file.read()
+        json_file.close()
+        loaded_model = model_from_json(loaded_model_json)
+        loaded_model.load_weights("model_rl2.json.h5")
+        print("Loaded model from disk")
+
+        loaded_model.compile(loss="mean_squared_error", optimizer="adam")
+
+        learning4(loaded_model)

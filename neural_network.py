@@ -10,7 +10,9 @@ from tensorflow._api.v2 import data
 
 def create_NN():
     model = Sequential()  # [Input(units=288, input_shape=[288], batch_size=1)]
-    model.add(Dense(units=512, input_shape=(288,), activation="relu"))
+    model.add(Dense(units=1024, input_shape=(288,), activation="relu"))
+    model.add(BatchNormalization())
+    model.add(Dense(512, activation="relu"))
     model.add(BatchNormalization())
     model.add(Dense(512, activation="relu"))
     model.add(BatchNormalization())

@@ -3,11 +3,11 @@ from scramble_cube import *
 import numpy as np
 
 if __name__ == "__main__":
-    json_file = open('model_rl5.json', 'r')
+    json_file = open('model_rl2.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     loaded_model = model_from_json(loaded_model_json)
-    loaded_model.load_weights("model_rl5.json.h5")
+    loaded_model.load_weights("model_rl2.json.h5")
     print("Loaded model from disk")
 
     loaded_model.compile(loss="mean_squared_error", optimizer="adam")

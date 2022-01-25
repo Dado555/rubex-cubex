@@ -20,12 +20,11 @@ def generate_dataset(num_of_scrambles, num_of_cubes):
 
             rotate_cube(state_list[state_idx], move, moves.index(move[0]))
 
-        if scramble >= 10:
-            file_state = open('dataset_states_gen_100k_' + str(scramble) + ".bin", 'wb')
-            pickle.dump(np.asarray(state_list), file_state)
+        file_state = open('dataset_states_gen_100k_' + str(scramble) + ".bin", 'wb')
+        pickle.dump(np.asarray(state_list), file_state)
 
-            file_state.close()
-            print("finished pickleing " + str(scramble))
+        file_state.close()
+        print("finished pickleing " + str(scramble))
 
 
 def generate_dataset_2(num_of_scrambles, num_of_cubes):
@@ -49,11 +48,12 @@ def generate_dataset_2(num_of_scrambles, num_of_cubes):
 
         states_list.extend(copy.deepcopy(state_list))
 
-    file_state = open('dataset_states_gen_2M.bin', 'ab')
+    file_state = open('data/dataset_states_gen_2_560_M.bin', 'wb')
     pickle.dump(np.asarray(states_list), file_state)
 
     file_state.close()
-    print("finished pickleing " + str(scramble))
+    print("finished pickleing")
+    # print("finished pickleing " + str(scramble))
 
 
 def add_scrambled_states(size, states_list):
@@ -75,6 +75,7 @@ def add_scrambled_states(size, states_list):
 
     states_list.extend(copy.deepcopy(state_list))
 
+
 def generate_dataset_3():
     states_list = []
 
@@ -83,24 +84,25 @@ def generate_dataset_3():
         1 : 10000,
         2 : 10000,
         3 : 10000,
-        4 : 40000,
-        5 : 96000
+        4 : 47002,
+        5 : 224818
     }
     
-    for i in range(4):
+    for i in range(5):
         add_scrambled_states(switcher.get(i), states_list)
-    
-    for _ in range(20):
+
+    for _ in range(11):
         add_scrambled_states(switcher.get(5), states_list)
 
-    file_state = open('dataset_states_gen_2M.bin', 'ab')
+    file_state = open('data/dataset_states_gen_2_560_M.bin', 'ab')
     pickle.dump(np.asarray(states_list), file_state)
 
     file_state.close()
     print("finished pickleing " + str(scramble))
 
 
-generate_dataset_3()
+# generate_dataset_3()
+# generate_dataset(16, 160000)
 
 # open a file, where you stored the pickled data
 #file = open('data/dataset_states_gen_100k_0.bin', 'rb')
