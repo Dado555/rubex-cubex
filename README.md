@@ -30,6 +30,8 @@ If the user is not satisfied with the predefined color values, they can calibrat
 <img src="images/calibration.png" width="" height="400">
 </p>
 
+To exit the application use the <em>ESC</em> key. As the application exits it will print out the moves needed to solve the given Rubik's cube.
+
 ## Developers
 
 -   Dalibor Malić, SW-50/2018
