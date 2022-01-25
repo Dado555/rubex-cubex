@@ -85,7 +85,7 @@ def show_webcam():
         # ESC to exit
         if cv2.waitKey(1) == 27:
             cube.print_faces()
-            loaded_model = load_model()
+            loaded_model = load_model("model_official.json", "model_official.h5")
             result = all_star(cube.get_nn_array(), loaded_model)
             print("result: " + str(result))
             break

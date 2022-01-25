@@ -207,10 +207,7 @@ def face_move_prime(state, x):
     state[x + 6:x + 12], state[x + 24: x + 30], state[x + 36: x + 42], state[x + 18: x + 24] = \
         state[x + 24: x + 30], state[x + 36: x +
                                      42], state[x + 18: x + 24], state[x + 6:x + 12]
-    # state[x: x + 6], state[x + 36: x + 42], state[x + 24: x + 30], state[x + 12: x+18] = \
-    #     state[x + 36: x + 42], state[x + 24: x + 30], state[x + 12: x+18], state[x: x + 6]
-    # state[x + 6:x + 12], state[x + 42: x + 48], state[x + 30: x + 36], state[x + 18: x + 24] = \
-    #     state[x + 42: x + 48], state[x + 30: x + 36], state[x + 18: x + 24], state[x + 6:x + 12]
+
 
 
 def face_move(state, x):
@@ -221,10 +218,7 @@ def face_move(state, x):
     state[x + 6:x + 12], state[x + 24: x + 30], state[x + 36: x + 42], state[x + 18: x + 24] = \
         state[x + 18: x + 24], state[x + 6:x +
                                      12], state[x + 24: x + 30], state[x + 36: x + 42]
-    # state[x: x + 6], state[x + 12: x+18], state[x + 24: x + 30], state[x + 36: x + 42] = \
-    #     state[x + 12: x + 18], state[x + 24: x + 30], state[x + 36: x + 42], state[x: x + 6]
-    # state[x + 6:x + 12], state[x + 18: x + 24], state[x + 30: x + 36], state[x + 42: x + 48] = \
-    #     state[x + 18: x + 24], state[x + 30: x + 36], state[x + 42: x + 48], state[x + 6:x + 12]
+
 
 
 def swap(state, x1, x2, x3, x4, y1, y2, y3, y4):
@@ -277,11 +271,6 @@ def check_if_final(state):
         if state[i] != starting_state[i]:
             return False
     return True
-    # for i in range(0, 6):
-    #     for j in range(0, 8):
-    #         if state[i][j] != finish_state[i][j]:
-    #             return False
-    # return True
 
 
 def convert_from_np_array(state, np_array):
@@ -443,17 +432,3 @@ def scramble(gen_moves):
 
 if __name__ == '__main__':
     scramble_cube(20)
-    # rotate_cube(starting_state, "B'", 3)
-    # print_cube(starting_state)
-    # scrambled_cube, gen_moves = scramble_cube()
-    # output_cube = np.concatenate([np.array([colours_dict[i] for i in scrambled_cube[1]]),
-    #                               np.array([colours_dict[i] for i in scrambled_cube[2]]),
-    #                               np.array([colours_dict[i] for i in scrambled_cube[3]]),
-    #                               np.array([colours_dict[i] for i in scrambled_cube[4]]),
-    #                               np.array([colours_dict[i] for i in scrambled_cube[0]]),
-    #                               np.array([colours_dict[i] for i in scrambled_cube[5]])], axis=0)
-    # print_rubicks(output_cube)
-    #
-    # new_cube = get_state_copy(finish_state)
-    # convert_from_np_array(new_cube, output_cube)
-    # print_cube(new_cube)

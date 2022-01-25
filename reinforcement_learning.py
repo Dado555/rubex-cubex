@@ -1,116 +1,79 @@
 from random import shuffle
-from scramble_cube import *
-from neural_network import *
 import time
 import random as rd
 import pickle
+from scramble_cube import *
+from neural_network import *
 
 
-def learning(batch_size, max_number_of_scrambles, training_iters, model):  # B, K, M
-    '''
-    θ←initialize_parameters()
-    θe←θ
-    for m=1 to M do
-    X←get_scrambled_states(B, K)
-    for xi∈X do
-    ← + θ y g min ( ( , x A( , x a)) j A( (x a, ))) i a
-    a
-    i i i e θ ← θ , loss train( , j X, )y
-    if (M mod C=0) and (loss<ϵ) then
-    θe
-    '''
-    for iteration in range(0, training_iters):
-        # positions_x = []
-        # result_y = []
-        # file_state = open('dataset_states.bin', 'wb')
-        # file_res = open('dataset_results.bin', 'wb')
-        # j = 0
-        # for b in range(0, batch_size):
-        #     if j % 1000 == 0:
-        #         print(str(j) + "/" + str(batch_size*max_number_of_scrambles))
-        #     cube = get_state_copy(starting_state)
-        #     for i in range(0, max_number_of_scrambles):
-        #         rand_move = rd.choice(moves)
-        #         rotate_cube(cube, rand_move, moves.index(rand_move[0]))
-        #         positions_x.append(np.array(get_state_copy(cube)))
-        #         result_y.append(rand_move)
-        #         j += 1
-        # pickle.dump(positions_x, file_state)
-        # pickle.dump(result_y, file_res)
+def learning(num_of_cubes, max_number_of_scrambles, model):  # B, K, M
+    positions_x = []
 
-        # file_state.close()
-        # file_res.close()
-        # print("finished pickleing")
-        # print("training epoche ")
-        # model.fit(np.asarray(positions_x, dtype=np.float32),
-        #           np.asarray(result_y, dtype=np.float32), batch_size=32, epochs=100)
+    for _ in range(num_of_cubes):
+        moves_to_make = gen_random_moves(max_number_of_scrambles)
 
-        positions_x = []  # niz np array-ova
-        for b in range(0, batch_size):  # ako je 32
-            moves_for_gen = gen_random_moves(max_number_of_scrambles)
-            cube = get_state_copy(starting_state)
-            positions = []  # njih ce biti 25
-            for m in moves_for_gen:
-                rotate_cube(cube, m, moves.index(m[0]))
-                positions.append(get_state_copy(cube))
+        new_move = get_state_copy(starting_state)
+        for m in moves_to_make:
+            rotate_cube(new_move, m, moves.index(m[0]))
+            positions_x.append(get_state_copy(new_move))
 
-            positions_x.extend(positions)
+            for og_m in moves:
+                new_move2 = get_state_copy(new_move)
+                rotate_cube(new_move2, og_m, moves.index(og_m[0]))
+                positions_x.append(new_move2)
 
-        result_y = []
+    print("Finished generating moves and their successors")
+    # u ovom momentu generisane su sve pozicije nakon iteration scrambleovanja, kao i skup svih 11 (zbog ponistavanja) mogucih poteza nakon svake
+    result_y = []
+    positions_x_reformed = []
 
-        positions_x_reformed = []
-        i = 0
-        for x in positions_x:
-            cube = x
-            init_state = get_state_copy(cube)
-            y_from_moves = []
-            for m in moves:
-                rotate_cube(cube, m, moves.index(m[0]))
-                if check_if_final(cube):
-                    y_from_moves.append(0)
-                    break
-                else:
-                    y = model(np.expand_dims(cube, axis=0))
-                    if y != 0:
-                        y_from_moves.append(abs(y))
-                cube = get_state_copy(init_state)  # vracamo
+    print("calculating predictions")
+    # racunamo sve y, ubrzavamo, nadam se
+    calculate_y_from_nn = model.predict(
+        np.asarray(positions_x), batch_size=4096)
+    print("finished calc pred")
 
-            max_y = min(y_from_moves) if len(
-                y_from_moves) != 0 else (i % 32) * 0.03
-            positions_x_reformed.append(np.array(cube))
-            result_y.append(max_y)
-            i += 1
-            # print("current iter: " + str(i) +
-            #       ", y value is: " + str(min(y_from_moves)))
+    for idx in range(0, len(positions_x), 13):
+        positions_x_reformed.append(positions_x[idx])
 
-        print("training epoche ")
-        model.fit(np.asarray(positions_x_reformed, dtype=np.float32),
-                  np.asarray(result_y, dtype=np.float32), batch_size=32, shuffle=False, epochs=100)
+        cube = positions_x[idx]
+        y_vals = []
+        y = -1
+        for next_idx in range(1, 13):
+            next_pos = positions_x[idx+next_idx]
+            if check_if_final(next_pos):
+                y = 1
+                break
+
+        # da li smo u finalnoj poziciji
+        if y == 1:
+            result_y.append(y)
+            continue
+        # ako nismo, uzimamo iz mreze
+        y_vals = calculate_y_from_nn[idx+1:idx+13]
+        result_y.append(min(y_vals)+1)
+
+    print("training epoche ")
+    model.fit(np.asarray(positions_x_reformed, dtype=np.float32),
+              np.asarray(result_y, dtype=np.float32), batch_size=128, shuffle=True, epochs=5)
 
     model_json = model.to_json()
-    with open("model_rl.json", "w") as json_file:
+    with open("model_rl_last_try.json", "w") as json_file:
         json_file.write(model_json)
-    model.save_weights("model_rl.json.h5")
+    model.save_weights("model_rl_last_try.h5")
     print("Saved model to disk")
     print('djura')
 
 
-if __name__ == '__main__':
-    model = create_NN()
-    # array = np.array([i for i in range(0, 288)])
-    # array = np.expand_dims(array, axis=0)
-    # print(model.predict(array))
-    learning(10000, 30, 1, model)
+json_file = open('model_rl.json', 'r')
+loaded_model_json = json_file.read()
+json_file.close()
+model = model_from_json(loaded_model_json)
+model.load_weights('model_rl.json.h5')
+print("Loaded model from disk")
 
-    # (10000 - random pozicija, za svaku generisati 12 sledecih poteza) * 30
-    ##############################################################################
-
-    # K - broj randomizovanja
-    # k=1 - 12          -> 12, epoha=10000
-    # k=2 - 244         ->
-    # k=3 - 1728
-    # k=4 - 20736
-    # k=5 - 248832
-    # k=6 - 2985984
-    # k=7 - 35831808
-    # k=8 - 429981696
+model.compile(loss="mean_squared_error", optimizer="adam")
+model.summary()
+#model = create_NN()
+print("iteracija 1 ~~~~")
+learning(100, 16, model)
