@@ -1,7 +1,7 @@
 # rubex-cubex
 Rubex-Cubex is a Rubik's cube detector and solver. It uses neural network with deep reinfocement learning to solve various states that the user inputs using their webcam and keyboard.
 ## Running the project
----
+
 ### Requirements
 All the dependencies listed in the <em>requirements.txt</em> file have to be installed, preferably inside an enviroment created with venv specifically for Rubex-Cubex. <br>
 
@@ -13,7 +13,7 @@ pip install -r requirements.txt
 The application also requires a working webcam. 
 
 ### Using the application
----
+
 To run the main application start the main.py file inside the face-recognition folder:
 ```console
 python main.py
@@ -31,7 +31,7 @@ If the user is not satisfied with the predefined color values, they can calibrat
 </p>
 
 ## Developers
----
+
 -   Dalibor Malić, SW-50/2018
 -   Darko Tica, SW-22/2018
 -   Zoran Jankov, SW-8/2018
