@@ -80,9 +80,9 @@ def learning3(model, num_scrambles, num_states):
     np.asarray(results, dtype=np.float32), batch_size=1024, shuffle=True, epochs=150)
 
     model_json = model.to_json()
-    with open("model_rl5.json", "w") as json_file:
+    with open("models/model_rl5.json", "w") as json_file:
         json_file.write(model_json)
-    model.save_weights("model_rl5.json.h5")
+    model.save_weights("models/model_rl5.json.h5")
     print("Saved model to disk")
     print('djura')
 
@@ -101,36 +101,60 @@ def learning4(model):  # B, K, M
     np.asarray(results, dtype=np.float32), batch_size=1024, shuffle=True, epochs=150)
 
     model_json = model.to_json()
-    with open("model_rl2.json", "w") as json_file:
+    with open("models/model_rl2.json", "w") as json_file:
         json_file.write(model_json)
-    model.save_weights("model_rl2.json.h5")
+    model.save_weights("models/model_rl2.json.h5")
+    print("Saved model to disk")
+    print('djura')
+
+def learningFinal(model):
+    results = []
+
+    file = open('data/dataset_states_gen_2_560_M.bin', 'rb')
+    states = pickle.load(file)
+    print(len(states))
+
+    for i in range(20):
+        results.extend([i+1] * int(200000/20))
+    print(len(results))
+
+    model.fit(np.asarray(states, dtype=np.float32),
+    np.asarray(results, dtype=np.float32), batch_size=1024, shuffle=True, epochs=150)
+
+    model_json = model.to_json()
+    with open("models/model_sl_final.json", "w") as json_file:
+        json_file.write(model_json)
+    model.save_weights("models/model_sl_final.json.h5")
     print("Saved model to disk")
     print('djura')
 
 
 if __name__ == '__main__':
-    # model = create_NN()
-    # learning(model)
+    generate_dataset_2(20, 200000) # 20000000
+    model = create_NN()
+    learningFinal(model)
 
-    json_file = open('model_rl.json', 'r')
-    loaded_model_json = json_file.read()
-    json_file.close()
-    loaded_model = model_from_json(loaded_model_json)
-    loaded_model.load_weights("model_rl.json.h5")
-    print("Loaded model from disk")
+    # json_file = open('models/model_rl.json', 'r')
+    # loaded_model_json = json_file.read()
+    # json_file.close()
+    # loaded_model = model_from_json(loaded_model_json)
+    # loaded_model.load_weights("models/model_rl.json.h5")
+    # print("Loaded model from disk")
 
-    loaded_model.compile(loss="mean_squared_error", optimizer="adam")
+    # loaded_model.compile(loss="mean_squared_error", optimizer="adam")
 
-    learning4(loaded_model)
+    # learning4(loaded_model)
 
-    for i in range(8):
-        json_file = open('model_rl2.json', 'r')
-        loaded_model_json = json_file.read()
-        json_file.close()
-        loaded_model = model_from_json(loaded_model_json)
-        loaded_model.load_weights("model_rl2.json.h5")
-        print("Loaded model from disk")
 
-        loaded_model.compile(loss="mean_squared_error", optimizer="adam")
+    # MORE TRAINING
+    # for i in range(8):
+    #     json_file = open('models/model_rl_final.json', 'r')
+    #     loaded_model_json = json_file.read()
+    #     json_file.close()
+    #     loaded_model = model_from_json(loaded_model_json)
+    #     loaded_model.load_weights("models/model_rl_final.json.h5")
+    #     print("Loaded model from disk")
 
-        learning4(loaded_model)
+    #     loaded_model.compile(loss="mean_squared_error", optimizer="adam")
+
+    #     learningFinal(loaded_model)

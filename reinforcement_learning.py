@@ -58,22 +58,22 @@ def learning(num_of_cubes, max_number_of_scrambles, model):  # B, K, M
               np.asarray(result_y, dtype=np.float32), batch_size=128, shuffle=True, epochs=5)
 
     model_json = model.to_json()
-    with open("model_rl_last_try.json", "w") as json_file:
+    with open("models/model_rl_final.json", "w") as json_file:
         json_file.write(model_json)
-    model.save_weights("model_rl_last_try.h5")
+    model.save_weights("models/model_rl_final.h5")
     print("Saved model to disk")
     print('djura')
 
 
-json_file = open('model_rl.json', 'r')
+json_file = open('models/model_sl_final.json', 'r')
 loaded_model_json = json_file.read()
 json_file.close()
 model = model_from_json(loaded_model_json)
-model.load_weights('model_rl.json.h5')
+model.load_weights('models/model_sl_final.json.h5')
 print("Loaded model from disk")
 
 model.compile(loss="mean_squared_error", optimizer="adam")
 model.summary()
 #model = create_NN()
 print("iteracija 1 ~~~~")
-learning(100, 16, model)
+learning(200000, 20, model) # 2000000

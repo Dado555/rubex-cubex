@@ -1,3 +1,4 @@
+from asyncore import write
 from scramble_cube import *
 import pickle
 
@@ -46,7 +47,8 @@ def generate_dataset_2(num_of_scrambles, num_of_cubes):
 
             rotate_cube(state_list[state_idx], move, moves.index(move[0]))
 
-        states_list.extend(copy.deepcopy(state_list))
+        write_list = copy.deepcopy(state_list)
+        states_list.extend(write_list)
 
     file_state = open('data/dataset_states_gen_2_560_M.bin', 'wb')
     pickle.dump(np.asarray(states_list), file_state)
@@ -100,6 +102,11 @@ def generate_dataset_3():
     file_state.close()
     print("finished pickleing " + str(scramble))
 
+
+
+generate_dataset_2(3, 300000)
+
+# 230MB per 100K cubes
 
 # generate_dataset_3()
 # generate_dataset(16, 160000)
