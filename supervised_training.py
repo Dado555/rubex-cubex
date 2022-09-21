@@ -115,11 +115,11 @@ def learningFinal(model):
     print(len(states))
 
     for i in range(20):
-        results.extend([i+1] * int(200000/20))
+        results.extend([i+1] * int(20000000/20))
     print(len(results))
 
     model.fit(np.asarray(states, dtype=np.float32),
-    np.asarray(results, dtype=np.float32), batch_size=1024, shuffle=True, epochs=150)
+    np.asarray(results, dtype=np.float32), batch_size=4096, shuffle=True, epochs=150) # batch_size = 1024
 
     model_json = model.to_json()
     with open("models/model_sl_final.json", "w") as json_file:
@@ -130,7 +130,7 @@ def learningFinal(model):
 
 
 if __name__ == '__main__':
-    generate_dataset_2(20, 200000) # 20000000
+    generate_dataset_2(20, 20000000) # 20000000
     model = create_NN()
     learningFinal(model)
 

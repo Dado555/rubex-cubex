@@ -6,20 +6,20 @@ from keras.models import model_from_json
 from greedy_search import *
 
 if __name__ == "__main__":
-    json_file3 = open('model_rl_last_try3.json', 'r')
+    json_file3 = open('models/model_sl_final.json', 'r')
     loaded_model_json3 = json_file3.read()
     json_file3.close()
     loaded_model3 = model_from_json(loaded_model_json3)
-    loaded_model3.load_weights("model_rl_last_try3.h5")
+    loaded_model3.load_weights("models/model_rl_final.h5")
     print("Loaded model from disk")
 
     loaded_model3.compile(loss="mean_squared_error", optimizer="adam")
 
-    json_file4 = open('model_rl_last_try4.json', 'r')
+    json_file4 = open('models/model_sl_final.json', 'r')
     loaded_model_json4 = json_file4.read()
     json_file4.close()
     loaded_model4 = model_from_json(loaded_model_json4)
-    loaded_model4.load_weights("model_rl_last_try4.h5")
+    loaded_model4.load_weights("models/model_sl_final.h5")
     print("Loaded model from disk")
 
     loaded_model3.compile(loss="mean_squared_error", optimizer="adam")

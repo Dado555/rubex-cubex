@@ -55,7 +55,7 @@ def learning(num_of_cubes, max_number_of_scrambles, model):  # B, K, M
 
     print("training epoche ")
     model.fit(np.asarray(positions_x_reformed, dtype=np.float32),
-              np.asarray(result_y, dtype=np.float32), batch_size=128, shuffle=True, epochs=5)
+              np.asarray(result_y, dtype=np.float32), batch_size=256, shuffle=True, epochs=50)
 
     model_json = model.to_json()
     with open("models/model_rl_final.json", "w") as json_file:
@@ -76,4 +76,4 @@ model.compile(loss="mean_squared_error", optimizer="adam")
 model.summary()
 #model = create_NN()
 print("iteracija 1 ~~~~")
-learning(200000, 20, model) # 2000000
+learning(50000, 20, model) # 2000000
